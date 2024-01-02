@@ -1,7 +1,12 @@
-<div>
-  <mat-grid-list cols="6" rowHeight="2:1">
+<div class="container">
+  <div class="margin-bottom-sm">
+    <button mat-raised-button color="primary" class="margin-right-sm" (click)="refreshLines()">Refresh</button>
+    <a mat-stroked-button color="accent" routerLink="/add/line">Add new line</a>
+  </div>
+  <mat-divider class="margin-bottom-sm"/>
+  <mat-grid-list cols="3" rowHeight="2:1" gutterSize="1rem">
     <mat-grid-tile *ngFor="let lineItem of linesList">
-      <mat-card>
+      <mat-card class="mat-card-fluid">
         <mat-card-header>
           <mat-card-title>Name: {{ lineItem.name }}</mat-card-title>
         </mat-card-header>

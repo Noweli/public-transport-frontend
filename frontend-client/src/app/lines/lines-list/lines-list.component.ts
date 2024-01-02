@@ -6,6 +6,9 @@ import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import {MatButtonModule} from "@angular/material/button";
 import {MatGridListModule} from "@angular/material/grid-list";
+import {Router, RouterLink} from "@angular/router";
+import {HttpErrorResponse} from "@angular/common/http";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-lines-list',
@@ -15,7 +18,8 @@ import {MatGridListModule} from "@angular/material/grid-list";
     MatCardModule,
     MatListModule,
     MatButtonModule,
-    MatGridListModule
+    MatGridListModule,
+    RouterLink
   ],
   templateUrl: './lines-list.component.html',
   styleUrl: './lines-list.component.scss'
@@ -23,23 +27,36 @@ import {MatGridListModule} from "@angular/material/grid-list";
 export class LinesListComponent implements OnInit {
   protected linesList: Line[] = null!;
 
-  constructor(private lineService: LineService) {
+  constructor(private lineService: LineService, private snackBar: MatSnackBar, private router: Router) {
   }
 
   ngOnInit(): void {
+    this.refreshLines();
+  }
+
+  protected handleEditLine(line: Line) {
+    this.router.navigate([`/edit/line/${line.id}`]).then();
+  }
+
+  protected handleDeleteLine(line: Line) {
+    this.lineService.deleteLine(line.id!)
+      .subscribe({
+        complete: () => {
+          this.snackBar.open(`Successfully deleted line ${line.name}`, 'OK', {duration: 3000});
+          this.refreshLines();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.snackBar.open(`Could not delete ${line.name}. ${error}`, 'OK');
+        }
+      });
+  }
+
+  protected refreshLines(): void {
     this.lineService.getAllLines()
       .subscribe({
         next: (result: LineListResult) => {
           this.linesList = result.data!
         }
       });
-  }
-
-  protected handleEditLine(line: Line) {
-
-  }
-
-  protected handleDeleteLine(line: Line) {
-
   }
 }

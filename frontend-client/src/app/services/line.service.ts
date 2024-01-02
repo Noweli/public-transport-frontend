@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {LineListResult} from "./models/public-transport-api";
+import {LineDTO, LineListResult, LineResult, Result} from "./models/public-transport-api";
 import {environment} from "../../environments/environment";
 import {catchError, Observable, throwError} from "rxjs";
 
@@ -19,11 +19,38 @@ export class LineService {
     ).pipe(catchError(this.handleError));
   }
 
+  public getSingleLine(id: number): Observable<LineResult> {
+    return this.httpClient.get<LineResult>(
+      `${environment.apiUrl}${this.LineEndpointPrefix}/${id}`
+    ).pipe(catchError(this.handleError));
+  }
+
+  public addLine(lineDto: LineDTO): Observable<Result> {
+    return this.httpClient.post<Result>(
+      environment.apiUrl + this.LineEndpointPrefix,
+      lineDto
+    ).pipe(catchError(this.handleError))
+  }
+
+  public deleteLine(id: number): Observable<Result> {
+    return this.httpClient.delete<Result>(
+      `${environment.apiUrl}${this.LineEndpointPrefix}/${id}`
+    ).pipe(catchError(this.handleError));
+  }
+
+  public updateLine(id: number, lineDto: LineDTO): Observable<LineResult> {
+    return this.httpClient.patch<LineResult>(
+      `${environment.apiUrl}${this.LineEndpointPrefix}/${id}`,
+      lineDto
+    ).pipe(catchError(this.handleError));
+  }
+
   private handleError(errorResponse: HttpErrorResponse): Observable<any> {
-    if (!errorResponse.error || !errorResponse.error.error) {
+    console.log(errorResponse);
+    if (!errorResponse.error) {
       return throwError(() => new Error('Unexpected error occurred.'));
     }
 
-    return throwError(() => new Error(errorResponse.error.error.message));
+    return throwError(() => new Error(errorResponse.error.message));
   }
 }
