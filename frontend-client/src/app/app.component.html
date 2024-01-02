@@ -3,7 +3,8 @@
   <mat-drawer #drawer class="sidenav" mode="side">
     <div class="container">
       <mat-list>
-        <mat-list-item><a mat-button routerLink="/view/lines" routerLinkActive="mat-accent">Lines</a></mat-list-item>
+        <mat-list-item><a mat-button routerLink="/view/lines" routerLinkActive="mat-accent"
+                          class="min-width-0">Lines</a></mat-list-item>
         <mat-list-item><a mat-button routerLink="/view/stoppoints" routerLinkActive="mat-accent">Stop points</a>
         </mat-list-item>
         <mat-list-item><a mat-button routerLink="/view/schedules" routerLinkActive="mat-accent">Schedules</a>
@@ -13,6 +14,5 @@
       </mat-list>
     </div>
   </mat-drawer>
-
   <router-outlet></router-outlet>
 </mat-drawer-container>
