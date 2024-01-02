@@ -15,7 +15,7 @@ export class LineService {
 
   public getAllLines(): Observable<LineListResult> {
     return this.httpClient.get<LineListResult>(
-      environment.apiUrl + this.LineEndpointPrefix + 'getall'
+      environment.apiUrl + this.LineEndpointPrefix + '/getall'
     ).pipe(catchError(this.handleError));
   }
 

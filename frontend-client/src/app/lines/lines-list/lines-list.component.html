@@ -1,4 +1,17 @@
-<div class="container">
-
-
+<div>
+  <mat-grid-list cols="6" rowHeight="2:1">
+    <mat-grid-tile *ngFor="let lineItem of linesList">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Name: {{ lineItem.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-divider class="margin-bottom-sm"/>
+        <mat-card-content> Identifier: {{ lineItem.identifier }}</mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button (click)="handleEditLine(lineItem)">Edit</button>
+          <button mat-button color="warn" (click)="handleDeleteLine(lineItem)">Delete</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>
