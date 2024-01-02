@@ -1,0 +1,18 @@
+<div class="container">
+  <h2>Add new line</h2>
+  <mat-divider class="margin-bottom-sm"/>
+  <form #lineForm="ngForm" (ngSubmit)="handleSubmit(lineForm)">
+    <mat-form-field class="margin-right-sm">
+      <mat-label>Line name</mat-label>
+      <input matInput type="text" name="name" ngModel required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Line identifier</mat-label>
+      <input matInput type="text" name="identifier" ngModel required>
+    </mat-form-field>
+    <div>
+      <button mat-stroked-button type="button" class="margin-right-sm" (click)="goBack()">Go back</button>
+      <button mat-raised-button type="submit" color="accent" [disabled]="!lineForm.valid">Add line</button>
+    </div>
+  </form>
+</div>

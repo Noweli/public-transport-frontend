@@ -6,6 +6,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import {MatButtonModule} from "@angular/material/button";
 import {MatGridListModule} from "@angular/material/grid-list";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-lines-list',
@@ -15,7 +16,8 @@ import {MatGridListModule} from "@angular/material/grid-list";
     MatCardModule,
     MatListModule,
     MatButtonModule,
-    MatGridListModule
+    MatGridListModule,
+    RouterLink
   ],
   templateUrl: './lines-list.component.html',
   styleUrl: './lines-list.component.scss'

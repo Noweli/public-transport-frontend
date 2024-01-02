@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {LineListResult} from "./models/public-transport-api";
+import {LineDTO, LineListResult, Result} from "./models/public-transport-api";
 import {environment} from "../../environments/environment";
 import {catchError, Observable, throwError} from "rxjs";
 
@@ -17,6 +17,13 @@ export class LineService {
     return this.httpClient.get<LineListResult>(
       environment.apiUrl + this.LineEndpointPrefix + '/getall'
     ).pipe(catchError(this.handleError));
+  }
+
+  public addLine(lineDto: LineDTO): Observable<Result> {
+    return this.httpClient.post<Result>(
+      environment.apiUrl + this.LineEndpointPrefix,
+      lineDto
+    ).pipe(catchError(this.handleError))
   }
 
   private handleError(errorResponse: HttpErrorResponse): Observable<any> {
