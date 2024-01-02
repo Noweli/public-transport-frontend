@@ -53,8 +53,7 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/purple-green.css",
-              "src/styles.scss",
-              "@picocss/pico/css/pico.min.css"
+              "src/styles.scss"
             ],
             "scripts": []
           },
