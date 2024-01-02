@@ -4,5 +4,6 @@ import {LineAddComponent} from "./lines/line-add/line-add.component";
 
 export const routes: Routes = [
   {path: 'view/lines', component: LinesListComponent},
-  {path: 'add/line', component: LineAddComponent}
+  {path: 'add/line', component: LineAddComponent},
+  {path: 'edit/line/:id', component: LineAddComponent}
 ];

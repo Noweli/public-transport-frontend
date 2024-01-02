@@ -12,7 +12,9 @@
     </mat-form-field>
     <div>
       <button mat-stroked-button type="button" class="margin-right-sm" (click)="goBack()">Go back</button>
-      <button mat-raised-button type="submit" color="accent" [disabled]="!lineForm.valid">Add line</button>
+      <button mat-raised-button type="submit" color="accent"
+              [disabled]="!lineForm.valid">{{ isEditMode ? 'Update' : 'Add' }} line
+      </button>
     </div>
   </form>
 </div>
