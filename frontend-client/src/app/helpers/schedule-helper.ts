@@ -1,5 +1,5 @@
 export class ScheduleHelper {
-  private static readonly dayMap = new Map([
+  public static readonly dayMap = new Map([
     ["0", "Sunday"],
     ["1", "Monday"],
     ["2", "Tuesday"],

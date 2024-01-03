@@ -4,6 +4,7 @@ import {LineAddComponent} from "./lines/line-add/line-add.component";
 import {StopPointsListComponent} from "./stoppoints/stoppoints-list/stoppoints-list.component";
 import {StopPointAddComponent} from "./stoppoints/stoppoint-add/stoppoint-add.component";
 import {ScheduleListComponent} from "./schedules/schedule-list/schedule-list.component";
+import {ScheduleAddComponent} from "./schedules/schedule-add/schedule-add.component";
 
 export const routes: Routes = [
   {path: 'view/lines', component: LinesListComponent},
@@ -12,5 +13,7 @@ export const routes: Routes = [
   {path: 'view/stoppoints', component: StopPointsListComponent},
   {path: 'add/stoppoint', component: StopPointAddComponent},
   {path: 'edit/stoppoint/:id', component: StopPointAddComponent},
-  {path: 'view/schedules', component: ScheduleListComponent}
+  {path: 'view/schedules', component: ScheduleListComponent},
+  {path: 'add/schedule', component: ScheduleAddComponent},
+  {path: 'edit/schedule/:id', component: ScheduleAddComponent}
 ];
