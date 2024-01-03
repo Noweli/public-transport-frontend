@@ -16,10 +16,10 @@ export class ScheduleHelper {
 
     const scheduleArray = input.split(",");
 
-    return scheduleArray.map((value: string) => this.getDayBasedOnInput(value)).join(",");
+    return scheduleArray.map((value: string) => this.getDayBasedOnInput(value)).join(", ");
   }
 
   private static getDayBasedOnInput(input: string): string {
-    return this.dayMap.get(input);
+    return this.dayMap.get(input)!;
   }
 }
