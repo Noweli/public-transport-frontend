@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {LineDTO, LineListResult, LineResult, Result} from "./models/public-transport-api";
 import {environment} from "../../environments/environment";
-import {catchError, Observable, throwError} from "rxjs";
+import {catchError, Observable} from "rxjs";
 import {ServiceHelpers} from "../helpers/service-helpers";
 
 @Injectable({
