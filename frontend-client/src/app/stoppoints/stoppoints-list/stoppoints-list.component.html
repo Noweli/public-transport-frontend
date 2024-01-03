@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="margin-bottom-sm">
+    <button mat-raised-button color="primary" class="margin-right-sm" (click)="refreshStopPoints()">Refresh</button>
+    <a mat-stroked-button color="accent" routerLink="/add/stoppoint">Add new stop point</a>
+  </div>
+  <mat-divider class="margin-bottom-sm"/>
+  <mat-grid-list cols="3" rowHeight="2:1" gutterSize="1rem">
+    <mat-grid-tile *ngFor="let stopPoint of stopPoints">
+      <mat-card class="mat-card-fluid">
+        <mat-card-header>
+          <mat-card-title>Name: {{ stopPoint.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-divider class="margin-bottom-sm"/>
+        <mat-card-content> Identifier: {{ stopPoint.identifier }}</mat-card-content>
+        <mat-card-content> Lat: {{ stopPoint.lat }}</mat-card-content>
+        <mat-card-content> Long: {{ stopPoint.long }}</mat-card-content>
+        <mat-card-content> Street name: {{ stopPoint.streetName }}</mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button (click)="handleEditStopPoint(stopPoint)">Edit</button>
+          <button mat-button color="warn" (click)="handleDeleteStopPoint(stopPoint)">Delete</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
