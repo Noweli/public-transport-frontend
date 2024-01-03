@@ -1,0 +1,36 @@
+<div class="container">
+  <h2>Add new stop point</h2>
+  <mat-divider class="margin-bottom-sm"/>
+  <form #stopPointForm="ngForm" (ngSubmit)="handleSubmit(stopPointForm)">
+    <div>
+      <mat-form-field class="margin-right-sm">
+        <mat-label>Stop point name</mat-label>
+        <input matInput type="text" name="name" ngModel required>
+      </mat-form-field>
+      <mat-form-field class="margin-right-sm">
+        <mat-label>Stop point identifier</mat-label>
+        <input matInput type="text" name="identifier" ngModel required>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="margin-right-sm">
+        <mat-label>Stop point lat</mat-label>
+        <input matInput type="text" name="lat" ngModel>
+      </mat-form-field>
+      <mat-form-field class="margin-right-sm">
+        <mat-label>Stop point long</mat-label>
+        <input matInput type="text" name="long" ngModel>
+      </mat-form-field>
+    </div>
+    <mat-form-field>
+      <mat-label>Stop point street name</mat-label>
+      <textarea matInput type="text" name="streetName" ngModel></textarea>
+    </mat-form-field>
+    <div>
+      <button mat-stroked-button type="button" class="margin-right-sm" (click)="goBack()">Go back</button>
+      <button mat-raised-button type="submit" color="accent"
+              [disabled]="!stopPointForm.valid">{{ isEditMode ? 'Update' : 'Add' }} stop point
+      </button>
+    </div>
+  </form>
+</div>
