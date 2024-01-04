@@ -50,7 +50,10 @@ export class ScheduleListComponent implements OnInit {
 
   handleDeleteSchedule(scheduleItem: ScheduleEntry): void {
     this.scheduleService.deleteSchedule(scheduleItem.id!).subscribe({
-      complete: () => this.snackBar.open('Successfully deleted schedule.', 'OK', {duration: 3000}),
+      complete: () => {
+        this.snackBar.open('Successfully deleted schedule.', 'OK', {duration: 3000});
+        this.refreshSchedules();
+      },
       error: err => this.snackBar.open('Could not delete schedule. ' + err, 'OK')
     })
   }

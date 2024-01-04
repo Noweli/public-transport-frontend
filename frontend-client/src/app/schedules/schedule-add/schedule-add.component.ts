@@ -1,14 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {CommonModule} from "@angular/common";
+import {CommonModule, Location} from "@angular/common";
 import {ScheduleHelper} from "../../helpers/schedule-helper";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import {ScheduleEntryDTO} from "../../services/models/public-transport-api";
+import {ScheduleService} from "../../services/schedule.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-schedule-add',
@@ -31,10 +34,10 @@ import {MatNativeDateModule} from "@angular/material/core";
 export class ScheduleAddComponent implements OnInit {
   private isEditMode: boolean = false;
   private id: number = null!;
-  protected recipeForm: FormGroup = null!;
+  protected scheduleForm: FormGroup = null!;
   protected readonly ScheduleHelper = ScheduleHelper;
 
-  constructor() {
+  constructor(private scheduleService: ScheduleService, private snackBar: MatSnackBar, private location: Location) {
   }
 
   ngOnInit(): void {
@@ -42,15 +45,19 @@ export class ScheduleAddComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.recipeForm);
+    if (this.isEditMode) {
+      return;
+    }
+
+    this.addSchedule();
   }
 
   private initializeForm() {
-    this.recipeForm = new FormGroup({
+    this.scheduleForm = new FormGroup({
       isRecurring: new FormControl(false),
       recurringDays: this.getDaysFormArray(),
-      date: new FormControl(),
-      time: new FormControl()
+      date: new FormControl('', Validators.required),
+      time: new FormControl('', Validators.required)
     });
   }
 
@@ -61,5 +68,48 @@ export class ScheduleAddComponent implements OnInit {
     }
 
     return formArray;
+  }
+
+  private addSchedule(): void {
+    if (!this.scheduleForm.valid) {
+      return;
+    }
+
+    const formValue = this.scheduleForm.value;
+
+    let scheduleDto: ScheduleEntryDTO = {
+      isRecurring: formValue.isRecurring,
+      recurringDays: this.convertDaysCheckboxList(formValue.recurringDays),
+      dateTime: this.getDateTime(formValue.date, formValue.time)
+    }
+
+    console.log(scheduleDto);
+
+    this.scheduleService.addSchedule(scheduleDto).subscribe({
+        complete: () => {
+          this.snackBar.open('Schedule added successfully', 'OK', {duration: 3000});
+          this.goBack();
+        },
+        error: (error) => this.snackBar.open('Failed to add schedule. ' + error, 'OK')
+      }
+    );
+  }
+
+  private convertDaysCheckboxList(input: boolean[]): string {
+    return input.map((value: boolean, index: number) => {
+      if (value) {
+        return index.toString();
+      }
+
+      return null;
+    }).filter(value => value !== null).join(',');
+  }
+
+  private getDateTime(date: Date, time: string): string {
+    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDay().toString().padStart(2, '0')}T${time}`;
+  }
+
+  protected goBack() {
+    this.location.back();
   }
 }
