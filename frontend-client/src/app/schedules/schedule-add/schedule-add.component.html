@@ -1,1 +1,31 @@
-<!-- To be done with reactive form -->
+<div class="container">
+  <h2>Add new schedule</h2>
+  <mat-divider class="margin-bottom-sm"/>
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+    <div>
+      <mat-checkbox id="isRecurring" formControlName="isRecurring">Is recurring</mat-checkbox>
+    </div>
+    <div *ngIf="recipeForm.get('isRecurring')?.value ?? false" formArrayName="recurringDays">
+      <mat-checkbox *ngFor="let day of ScheduleHelper.dayMap | keyvalue"
+                    [formControlName]="day.key">
+        {{ day.value }}
+      </mat-checkbox>
+    </div>
+    <div class="margin-bottom-sm">
+      <mat-form-field class="margin-right-sm">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date" required>
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Time</mat-label>
+        <input matInput placeholder="01:00:00" formControlName="time" required>
+      </mat-form-field>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" type="submit">Add new schedule</button>
+    </div>
+  </form>
+</div>
