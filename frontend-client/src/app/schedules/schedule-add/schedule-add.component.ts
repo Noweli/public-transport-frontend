@@ -83,7 +83,7 @@ export class ScheduleAddComponent implements OnInit {
     this.scheduleService.getScheduleById(this.id).subscribe({
       next: (result) => {
         const schedule = result.data!;
-        const time = this.getTimeFromString(schedule.dateTime!);
+        const time = ScheduleHelper.getTimeFromString(schedule.dateTime!);
 
         this.scheduleForm = new FormGroup({
           isRecurring: new FormControl(schedule.isRecurring),
@@ -168,7 +168,7 @@ export class ScheduleAddComponent implements OnInit {
     return {
       isRecurring: formValue.isRecurring,
       recurringDays: this.convertDaysCheckboxList(formValue.recurringDays),
-      dateTime: this.getDateTime(new Date(formValue.date), formValue.time)
+      dateTime: ScheduleHelper.getDateTime(new Date(formValue.date), formValue.time)
     };
   }
 
@@ -180,18 +180,6 @@ export class ScheduleAddComponent implements OnInit {
 
       return null;
     }).filter(value => value !== null).join(',');
-  }
-
-  private getDateTime(date: Date, time: string): string {
-    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${time}`;
-  }
-
-  private getTimeFromString(input: string): string {
-    const dateObject = new Date(input);
-
-    return dateObject.getHours().toString().padStart(2, '0') + ':' +
-      dateObject.getMinutes().toString().padStart(2, '0') + ':' +
-      dateObject.getSeconds().toString().padStart(2, '0');
   }
 
   protected goBack() {
