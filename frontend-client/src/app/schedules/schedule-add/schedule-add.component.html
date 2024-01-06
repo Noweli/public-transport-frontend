@@ -1,16 +1,19 @@
 <div class="container">
-  <h2>Add new schedule</h2>
+  <h2>{{ isEditMode ? 'Update' : 'Add new' }} schedule</h2>
   <mat-divider class="margin-bottom-sm"/>
   <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()">
     <div>
       <mat-checkbox id="isRecurring" formControlName="isRecurring">Is recurring</mat-checkbox>
     </div>
-    <div *ngIf="scheduleForm.get('isRecurring')?.value ?? false" formArrayName="recurringDays">
-      <mat-checkbox *ngFor="let day of ScheduleHelper.dayMap | keyvalue"
-                    [formControlName]="day.key">
-        {{ day.value }}
-      </mat-checkbox>
-    </div>
+    <mat-card appearance="raised" class="margin-bottom-sm" style="max-width: fit-content; padding-right: 1rem;">
+      <div style="display: inline;" *ngIf="scheduleForm.get('isRecurring')?.value ?? false"
+           formArrayName="recurringDays">
+        <mat-checkbox *ngFor="let day of ScheduleHelper.dayMap | keyvalue"
+                      [formControlName]="day.key">
+          {{ day.value }}
+        </mat-checkbox>
+      </div>
+    </mat-card>
     <div class="margin-bottom-sm">
       <mat-form-field class="margin-right-sm">
         <mat-label>Date</mat-label>
@@ -30,7 +33,7 @@
     </div>
     <div>
       <button mat-stroked-button type="button" class="margin-right-sm" (click)="goBack()">Go back</button>
-      <button mat-raised-button color="primary" type="submit">Add new schedule</button>
+      <button mat-raised-button color="primary" type="submit">{{ isEditMode ? 'Update' : 'Add new' }} schedule</button>
     </div>
   </form>
 </div>

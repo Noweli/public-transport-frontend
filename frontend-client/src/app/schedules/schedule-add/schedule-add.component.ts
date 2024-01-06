@@ -12,6 +12,8 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {ScheduleEntryDTO} from "../../services/models/public-transport-api";
 import {ScheduleService} from "../../services/schedule.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatCardModule} from "@angular/material/card";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-schedule-add',
@@ -26,26 +28,37 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     ReactiveFormsModule,
     CommonModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatCardModule
   ],
   templateUrl: './schedule-add.component.html',
   styleUrl: './schedule-add.component.scss'
 })
 export class ScheduleAddComponent implements OnInit {
-  private isEditMode: boolean = false;
   private id: number = null!;
+  protected isEditMode: boolean = false;
   protected scheduleForm: FormGroup = null!;
   protected readonly ScheduleHelper = ScheduleHelper;
 
-  constructor(private scheduleService: ScheduleService, private snackBar: MatSnackBar, private location: Location) {
+  constructor(private scheduleService: ScheduleService,
+              private snackBar: MatSnackBar,
+              private location: Location,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.id = +params['id'];
+      }
+    });
     this.initializeForm();
   }
 
   onSubmit(): void {
     if (this.isEditMode) {
+      this.updateSchedule();
       return;
     }
 
@@ -59,6 +72,31 @@ export class ScheduleAddComponent implements OnInit {
       date: new FormControl('', Validators.required),
       time: new FormControl('', Validators.required)
     });
+
+    if (this.isEditMode) {
+      this.initializeEditForm();
+      return;
+    }
+  }
+
+  private initializeEditForm(): void {
+    this.scheduleService.getScheduleById(this.id).subscribe({
+      next: (result) => {
+        const schedule = result.data!;
+        const time = ScheduleHelper.getTimeFromString(schedule.dateTime!);
+
+        this.scheduleForm = new FormGroup({
+          isRecurring: new FormControl(schedule.isRecurring),
+          recurringDays: this.initializeDaysForEdit(schedule.recurringDays!),
+          date: new FormControl(schedule.dateTime!),
+          time: new FormControl(time)
+        });
+      },
+      error: err => {
+        this.snackBar.open('Error occurred while fetching schedule. ' + err, 'OK');
+        return null!;
+      }
+    });
   }
 
   private getDaysFormArray(): FormArray {
@@ -70,20 +108,32 @@ export class ScheduleAddComponent implements OnInit {
     return formArray;
   }
 
+  private initializeDaysForEdit(daysString: string): FormArray {
+    if (!daysString) {
+      return this.getDaysFormArray();
+    }
+
+    let formArray: FormArray = new FormArray<any>([]);
+    let formObject: { [key: number]: FormControl } = {};
+    for (let i = 0; i < ScheduleHelper.dayMap.size; i++) {
+      if (daysString.includes(i.toString())) {
+        formObject[i] = new FormControl(true);
+      } else {
+        formObject[i] = new FormControl(false);
+      }
+
+      formArray.push(formObject[i]);
+    }
+
+    return formArray;
+  }
+
   private addSchedule(): void {
     if (!this.scheduleForm.valid) {
       return;
     }
 
-    const formValue = this.scheduleForm.value;
-
-    let scheduleDto: ScheduleEntryDTO = {
-      isRecurring: formValue.isRecurring,
-      recurringDays: this.convertDaysCheckboxList(formValue.recurringDays),
-      dateTime: this.getDateTime(formValue.date, formValue.time)
-    }
-
-    console.log(scheduleDto);
+    const scheduleDto = this.prepareDto();
 
     this.scheduleService.addSchedule(scheduleDto).subscribe({
         complete: () => {
@@ -95,6 +145,33 @@ export class ScheduleAddComponent implements OnInit {
     );
   }
 
+  private updateSchedule(): void {
+    if (!this.scheduleForm.valid) {
+      return;
+    }
+
+    const scheduleDto = this.prepareDto();
+
+    this.scheduleService.updateSchedule(this.id, scheduleDto).subscribe({
+        complete: () => {
+          this.snackBar.open('Schedule updated successfully', 'OK', {duration: 3000});
+          this.goBack();
+        },
+        error: (error) => this.snackBar.open('Failed to update schedule. ' + error, 'OK')
+      }
+    );
+  }
+
+  private prepareDto(): ScheduleEntryDTO {
+    const formValue = this.scheduleForm.value;
+
+    return {
+      isRecurring: formValue.isRecurring,
+      recurringDays: this.convertDaysCheckboxList(formValue.recurringDays),
+      dateTime: ScheduleHelper.getDateTime(new Date(formValue.date), formValue.time)
+    };
+  }
+
   private convertDaysCheckboxList(input: boolean[]): string {
     return input.map((value: boolean, index: number) => {
       if (value) {
@@ -103,10 +180,6 @@ export class ScheduleAddComponent implements OnInit {
 
       return null;
     }).filter(value => value !== null).join(',');
-  }
-
-  private getDateTime(date: Date, time: string): string {
-    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDay().toString().padStart(2, '0')}T${time}`;
   }
 
   protected goBack() {

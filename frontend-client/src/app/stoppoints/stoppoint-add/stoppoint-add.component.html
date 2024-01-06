@@ -1,5 +1,5 @@
 <div class="container">
-  <h2>Add new stop point</h2>
+  <h2>{{ isEditMode ? 'Update' : 'Add new' }} stop point</h2>
   <mat-divider class="margin-bottom-sm"/>
   <form #stopPointForm="ngForm" (ngSubmit)="handleSubmit(stopPointForm)">
     <div>
@@ -29,7 +29,7 @@
     <div>
       <button mat-stroked-button type="button" class="margin-right-sm" (click)="goBack()">Go back</button>
       <button mat-raised-button type="submit" color="accent"
-              [disabled]="!stopPointForm.valid">{{ isEditMode ? 'Update' : 'Add' }} stop point
+              [disabled]="!stopPointForm.valid">{{ isEditMode ? 'Update' : 'Add new' }} stop point
       </button>
     </div>
   </form>

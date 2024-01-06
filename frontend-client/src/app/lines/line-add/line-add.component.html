@@ -1,5 +1,5 @@
 <div class="container">
-  <h2>Add new line</h2>
+  <h2>{{ isEditMode ? 'Update' : 'Add new' }} line</h2>
   <mat-divider class="margin-bottom-sm"/>
   <form #lineForm="ngForm" (ngSubmit)="handleSubmit(lineForm)">
     <mat-form-field class="margin-right-sm">
@@ -13,7 +13,7 @@
     <div>
       <button mat-stroked-button type="button" class="margin-right-sm" (click)="goBack()">Go back</button>
       <button mat-raised-button type="submit" color="accent"
-              [disabled]="!lineForm.valid">{{ isEditMode ? 'Update' : 'Add' }} line
+              [disabled]="!lineForm.valid">{{ isEditMode ? 'Update' : 'Add new' }} line
       </button>
     </div>
   </form>

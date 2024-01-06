@@ -20,6 +20,12 @@ export class ScheduleService {
     ).pipe(catchError(ServiceHelpers.handleError));
   }
 
+  public getScheduleById(id: number): Observable<ScheduleEntryResult> {
+    return this.httpClient.get<ScheduleEntryResult>(
+      `${environment.apiUrl}${this.scheduleEndpoint}/${id}`
+    ).pipe(catchError(ServiceHelpers.handleError));
+  }
+
   public addSchedule(scheduleDto: ScheduleEntryDTO): Observable<ScheduleEntryResult> {
     return this.httpClient.post<ScheduleEntryResult>(
       `${environment.apiUrl}${this.scheduleEndpoint}`,
