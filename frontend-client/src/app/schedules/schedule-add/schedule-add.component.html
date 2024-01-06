@@ -5,12 +5,15 @@
     <div>
       <mat-checkbox id="isRecurring" formControlName="isRecurring">Is recurring</mat-checkbox>
     </div>
-    <div *ngIf="scheduleForm.get('isRecurring')?.value ?? false" formArrayName="recurringDays">
-      <mat-checkbox *ngFor="let day of ScheduleHelper.dayMap | keyvalue"
-                    [formControlName]="day.key">
-        {{ day.value }}
-      </mat-checkbox>
-    </div>
+    <mat-card appearance="raised" class="margin-bottom-sm" style="max-width: fit-content; padding-right: 1rem;">
+      <div style="display: inline;" *ngIf="scheduleForm.get('isRecurring')?.value ?? false"
+           formArrayName="recurringDays">
+        <mat-checkbox *ngFor="let day of ScheduleHelper.dayMap | keyvalue"
+                      [formControlName]="day.key">
+          {{ day.value }}
+        </mat-checkbox>
+      </div>
+    </mat-card>
     <div class="margin-bottom-sm">
       <mat-form-field class="margin-right-sm">
         <mat-label>Date</mat-label>

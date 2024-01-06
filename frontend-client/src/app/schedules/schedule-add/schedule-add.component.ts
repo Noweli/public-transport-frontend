@@ -12,6 +12,8 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {ScheduleEntryDTO} from "../../services/models/public-transport-api";
 import {ScheduleService} from "../../services/schedule.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatCardModule} from "@angular/material/card";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-schedule-add',
@@ -26,7 +28,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     ReactiveFormsModule,
     CommonModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatCardModule
   ],
   templateUrl: './schedule-add.component.html',
   styleUrl: './schedule-add.component.scss'
@@ -37,10 +40,19 @@ export class ScheduleAddComponent implements OnInit {
   protected scheduleForm: FormGroup = null!;
   protected readonly ScheduleHelper = ScheduleHelper;
 
-  constructor(private scheduleService: ScheduleService, private snackBar: MatSnackBar, private location: Location) {
+  constructor(private scheduleService: ScheduleService,
+              private snackBar: MatSnackBar,
+              private location: Location,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.id = +params['id'];
+      }
+    });
     this.initializeForm();
   }
 
@@ -59,12 +71,57 @@ export class ScheduleAddComponent implements OnInit {
       date: new FormControl('', Validators.required),
       time: new FormControl('', Validators.required)
     });
+
+    if (this.isEditMode) {
+      this.initializeEditForm();
+      return;
+    }
+  }
+
+  private initializeEditForm(): void {
+    this.scheduleService.getScheduleById(this.id).subscribe({
+      next: (result) => {
+        const schedule = result.data!;
+        const time = this.getTimeFromString(schedule.dateTime!);
+
+        this.scheduleForm = new FormGroup({
+          isRecurring: new FormControl(schedule.isRecurring),
+          recurringDays: this.initializeDaysForEdit(schedule.recurringDays!),
+          date: new FormControl(schedule.dateTime!),
+          time: new FormControl(time)
+        });
+      },
+      error: err => {
+        this.snackBar.open('Error occurred while fetching schedule. ' + err, 'OK');
+        return null!;
+      }
+    });
   }
 
   private getDaysFormArray(): FormArray {
     let formArray: FormArray = new FormArray<any>([]);
     for (let i = 0; i < ScheduleHelper.dayMap.size; i++) {
       formArray.push(new FormControl(false))
+    }
+
+    return formArray;
+  }
+
+  private initializeDaysForEdit(daysString: string): FormArray {
+    if (!daysString) {
+      return this.getDaysFormArray();
+    }
+
+    let formArray: FormArray = new FormArray<any>([]);
+    let formObject: { [key: number]: FormControl } = {};
+    for (let i = 0; i < ScheduleHelper.dayMap.size; i++) {
+      if (daysString.includes(i.toString())) {
+        formObject[i] = new FormControl(true);
+      } else {
+        formObject[i] = new FormControl(false);
+      }
+
+      formArray.push(formObject[i]);
     }
 
     return formArray;
@@ -106,7 +163,15 @@ export class ScheduleAddComponent implements OnInit {
   }
 
   private getDateTime(date: Date, time: string): string {
-    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDay().toString().padStart(2, '0')}T${time}`;
+    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${time}`;
+  }
+
+  private getTimeFromString(input: string): string {
+    const dateObject = new Date(input);
+
+    return dateObject.getHours().toString().padStart(2, '0') + ':' +
+      dateObject.getMinutes().toString().padStart(2, '0') + ':' +
+      dateObject.getSeconds().toString().padStart(2, '0');
   }
 
   protected goBack() {
