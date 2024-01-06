@@ -35,8 +35,8 @@ import {ActivatedRoute} from "@angular/router";
   styleUrl: './schedule-add.component.scss'
 })
 export class ScheduleAddComponent implements OnInit {
-  private isEditMode: boolean = false;
   private id: number = null!;
+  protected isEditMode: boolean = false;
   protected scheduleForm: FormGroup = null!;
   protected readonly ScheduleHelper = ScheduleHelper;
 
@@ -58,6 +58,7 @@ export class ScheduleAddComponent implements OnInit {
 
   onSubmit(): void {
     if (this.isEditMode) {
+      this.updateSchedule();
       return;
     }
 
@@ -132,15 +133,7 @@ export class ScheduleAddComponent implements OnInit {
       return;
     }
 
-    const formValue = this.scheduleForm.value;
-
-    let scheduleDto: ScheduleEntryDTO = {
-      isRecurring: formValue.isRecurring,
-      recurringDays: this.convertDaysCheckboxList(formValue.recurringDays),
-      dateTime: this.getDateTime(formValue.date, formValue.time)
-    }
-
-    console.log(scheduleDto);
+    const scheduleDto = this.prepareDto();
 
     this.scheduleService.addSchedule(scheduleDto).subscribe({
         complete: () => {
@@ -150,6 +143,33 @@ export class ScheduleAddComponent implements OnInit {
         error: (error) => this.snackBar.open('Failed to add schedule. ' + error, 'OK')
       }
     );
+  }
+
+  private updateSchedule(): void {
+    if (!this.scheduleForm.valid) {
+      return;
+    }
+
+    const scheduleDto = this.prepareDto();
+
+    this.scheduleService.updateSchedule(this.id, scheduleDto).subscribe({
+        complete: () => {
+          this.snackBar.open('Schedule updated successfully', 'OK', {duration: 3000});
+          this.goBack();
+        },
+        error: (error) => this.snackBar.open('Failed to update schedule. ' + error, 'OK')
+      }
+    );
+  }
+
+  private prepareDto(): ScheduleEntryDTO {
+    const formValue = this.scheduleForm.value;
+
+    return {
+      isRecurring: formValue.isRecurring,
+      recurringDays: this.convertDaysCheckboxList(formValue.recurringDays),
+      dateTime: this.getDateTime(new Date(formValue.date), formValue.time)
+    };
   }
 
   private convertDaysCheckboxList(input: boolean[]): string {

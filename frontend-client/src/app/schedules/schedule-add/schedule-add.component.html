@@ -1,5 +1,5 @@
 <div class="container">
-  <h2>Add new schedule</h2>
+  <h2>{{ isEditMode ? 'Update' : 'Add new' }} schedule</h2>
   <mat-divider class="margin-bottom-sm"/>
   <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()">
     <div>
@@ -33,7 +33,7 @@
     </div>
     <div>
       <button mat-stroked-button type="button" class="margin-right-sm" (click)="goBack()">Go back</button>
-      <button mat-raised-button color="primary" type="submit">Add new schedule</button>
+      <button mat-raised-button color="primary" type="submit">{{ isEditMode ? 'Update' : 'Add new' }} schedule</button>
     </div>
   </form>
 </div>
