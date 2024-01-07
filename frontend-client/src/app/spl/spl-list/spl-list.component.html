@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="margin-bottom-sm">
+    <button mat-raised-button color="primary" class="margin-right-sm" (click)="refreshLines()">Refresh</button>
+    <a mat-stroked-button color="accent" routerLink="/add/line">Add new stop point line correlation</a>
+  </div>
+  <mat-divider class="margin-bottom-sm"/>
+  <mat-grid-list cols="3" rowHeight="2:1" gutterSize="1rem">
+    <mat-grid-tile *ngFor="let splItem of splList">
+      <mat-card class="mat-card-fluid">
+        <mat-card-header>
+          <mat-card-title>Line: {{ splItem.line?.name }} Stop point: {{ splItem.stopPoint?.name }}
+            ({{ splItem.stopPoint?.identifier }})
+          </mat-card-title>
+        </mat-card-header>
+        <mat-divider class="margin-bottom-sm"/>
+        <mat-card-actions align="end">
+          <button mat-button (click)="handleSplEdit(splItem)">Edit</button>
+          <button mat-button color="warn" (click)="handleSplDelete(splItem)">Delete</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
