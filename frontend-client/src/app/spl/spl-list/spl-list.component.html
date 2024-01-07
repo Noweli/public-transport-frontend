@@ -8,12 +8,14 @@
     <mat-grid-tile *ngFor="let splItem of splList">
       <mat-card class="mat-card-fluid">
         <mat-card-header>
-          <mat-card-title>Line: {{ splItem.line?.name }} Stop point: {{ splItem.stopPoint?.name }}
-            ({{ splItem.stopPoint?.identifier }})
+          <mat-card-title>Line: {{ splItem.line?.name }} <br>
+            Stop point: {{ splItem.stopPoint?.name }} ({{ splItem.stopPoint?.identifier }})
           </mat-card-title>
         </mat-card-header>
         <mat-divider class="margin-bottom-sm"/>
-        <mat-card-actions align="end">
+        <mat-card-actions align="start">
+          <a mat-button color="accent" [routerLink]="'/view/spl/details/' + splItem.id">More info</a>
+          <span style="flex: 1 1 auto;"></span>
           <button mat-button (click)="handleSplEdit(splItem)">Edit</button>
           <button mat-button color="warn" (click)="handleSplDelete(splItem)">Delete</button>
         </mat-card-actions>
