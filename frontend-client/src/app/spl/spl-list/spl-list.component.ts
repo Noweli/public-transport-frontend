@@ -3,11 +3,13 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatGridListModule} from "@angular/material/grid-list";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {StopPointLineCorrelation} from "../../services/models/public-transport-api";
 import {SplService} from "../../services/spl.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {ScheduleHelper} from "../../helpers/schedule-helper";
 
 @Component({
   selector: 'app-spl-list',
@@ -18,7 +20,9 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     MatDividerModule,
     MatGridListModule,
     NgForOf,
-    RouterLink
+    RouterLink,
+    MatExpansionModule,
+    NgIf
   ],
   templateUrl: './spl-list.component.html',
   styleUrl: './spl-list.component.scss'
@@ -47,4 +51,6 @@ export class SplListComponent implements OnInit {
       error: err => this.snackBar.open('Could not refresh spl list. ' + err, 'OK')
     });
   }
+
+  protected readonly ScheduleHelper = ScheduleHelper;
 }

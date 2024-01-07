@@ -4,17 +4,43 @@
     <a mat-stroked-button color="accent" routerLink="/add/line">Add new stop point line correlation</a>
   </div>
   <mat-divider class="margin-bottom-sm"/>
-  <mat-grid-list cols="3" rowHeight="2:1" gutterSize="1rem">
+  <mat-grid-list cols="2" gutterSize="1rem">
     <mat-grid-tile *ngFor="let splItem of splList">
-      <mat-card class="mat-card-fluid">
+      <mat-card class="mat-card-fluid" style="align-self: start">
         <mat-card-header>
           <mat-card-title>Line: {{ splItem.line?.name }} <br>
             Stop point: {{ splItem.stopPoint?.name }} ({{ splItem.stopPoint?.identifier }})
           </mat-card-title>
         </mat-card-header>
         <mat-divider class="margin-bottom-sm"/>
+        <mat-card-content>
+          <mat-accordion *ngIf="splItem.scheduleEntries">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Schedules
+                </mat-panel-title>
+                <mat-panel-description>
+                  Schedules assigned to SPL
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <mat-card class="mat-card-fluid margin-bottom-sm" *ngFor="let schedule of splItem.scheduleEntries"
+                        appearance="outlined">
+                <mat-card-header>
+                  <mat-card-title>
+                    Id: {{ schedule.id }}
+                  </mat-card-title>
+                </mat-card-header>
+                <mat-divider class="margin-bottom-sm"/>
+                <mat-card-content> Is recurring: {{ schedule.isRecurring }}</mat-card-content>
+                <mat-card-content> Recurring days: {{ ScheduleHelper.convertScheduleToDays(schedule.recurringDays!) }}
+                </mat-card-content>
+                <mat-card-content> Date time: {{ schedule.dateTime }}</mat-card-content>
+              </mat-card>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </mat-card-content>
         <mat-card-actions align="start">
-          <a mat-button color="accent" [routerLink]="'/view/spl/details/' + splItem.id">More info</a>
           <span style="flex: 1 1 auto;"></span>
           <button mat-button (click)="handleSplEdit(splItem)">Edit</button>
           <button mat-button color="warn" (click)="handleSplDelete(splItem)">Delete</button>
