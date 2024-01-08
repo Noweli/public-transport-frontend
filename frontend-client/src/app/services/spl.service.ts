@@ -24,6 +24,11 @@ export class SplService {
       .pipe(catchError(ServiceHelpers.handleError));
   }
 
+  public getSingleSpl(id: number): Observable<StopPointLineCorrelationResult> {
+    return this.httpClient.get<StopPointLineCorrelationResult>(`${environment.apiUrl}${this.splEndpoint}/${id}`)
+      .pipe(catchError(ServiceHelpers.handleError));
+  }
+
   public addSpl(splDto: SPLDTO): Observable<StopPointLineCorrelationResult> {
     return this.httpClient.post<StopPointLineCorrelationResult>(environment.apiUrl + this.splEndpoint, splDto)
       .pipe(catchError(ServiceHelpers.handleError));
