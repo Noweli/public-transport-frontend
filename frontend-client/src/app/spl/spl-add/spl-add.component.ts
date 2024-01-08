@@ -11,6 +11,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {NgClass, NgForOf} from "@angular/common";
 import {MatStepperModule} from "@angular/material/stepper";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-spl-add',
@@ -38,7 +39,8 @@ export class SplAddComponent implements OnInit {
   constructor(private splService: SplService,
               private stopPointService: StopPointService,
               private lineService: LineService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -56,7 +58,13 @@ export class SplAddComponent implements OnInit {
       stopPointId: this.selectedStopPoint.id
     }
 
-    this.splService.addSpl(splDto);
+    this.splService.addSpl(splDto).subscribe({
+      complete: () => {
+        this.snackBar.open('Successfully added SPL.', 'OK', {duration: 3000});
+        this.goBack();
+      },
+      error: err => this.snackBar.open('Failed to add SPL. ' + err, 'OK')
+    });
   }
 
   handleSelectStopPoint(selectedStopPoint: StopPoint) {
@@ -65,6 +73,10 @@ export class SplAddComponent implements OnInit {
 
   handleSelectLine(lineItem: Line) {
     this.selectedLine = lineItem;
+  }
+
+  goBack(): void {
+    this.router.navigate(['view/spl']).then();
   }
 
   private initializeStopPointsArray(): void {

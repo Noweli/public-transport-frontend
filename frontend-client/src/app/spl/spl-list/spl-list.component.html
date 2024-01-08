@@ -12,7 +12,7 @@
     </mat-card-header>
     <mat-divider class="margin-bottom-sm"/>
     <mat-card-content>
-      <mat-accordion *ngIf="splItem.scheduleEntries">
+      <mat-accordion *ngIf="splItem.scheduleEntries && splItem.scheduleEntries.length > 0">
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>

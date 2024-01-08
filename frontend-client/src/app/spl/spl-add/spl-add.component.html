@@ -23,7 +23,8 @@
           </mat-card-actions>
         </mat-card>
         <div>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button class="margin-right-sm" type="button" (click)="goBack()" color="warn">Back to list</button>
+          <button mat-button type="button" matStepperNext>Next step</button>
         </div>
       </mat-step>
       <mat-step label="Select line" [completed]="selectedLine !== null">
@@ -43,8 +44,8 @@
           </mat-card-actions>
         </mat-card>
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button type="button" matStepperPrevious>Back</button>
+          <button mat-button type="button" matStepperNext>Next step</button>
         </div>
       </mat-step>
       <mat-step label="Confirm">
@@ -57,7 +58,7 @@
           </mat-card-header>
         </mat-card>
         <div>
-          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button type="button" matStepperPrevious>Back</button>
           <button mat-button type="submit" (click)="handleSubmit(splForm)" color="accent">Confirm</button>
         </div>
       </mat-step>
