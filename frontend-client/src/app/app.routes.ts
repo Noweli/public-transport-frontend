@@ -19,5 +19,6 @@ export const routes: Routes = [
   {path: 'add/schedule', component: ScheduleAddComponent},
   {path: 'edit/schedule/:id', component: ScheduleAddComponent},
   {path: 'view/spl', component: SplListComponent},
-  {path: 'add/spl', component: SplAddComponent}
+  {path: 'add/spl', component: SplAddComponent},
+  {path: 'edit/spl/:id', component: SplAddComponent}
 ];

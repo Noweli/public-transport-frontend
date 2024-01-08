@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormsModule, NgForm} from "@angular/forms";
+import {FormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {SplService} from "../../services/spl.service";
 import {StopPointService} from "../../services/stoppoint.service";
@@ -11,7 +11,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {NgClass, NgForOf} from "@angular/common";
 import {MatStepperModule} from "@angular/material/stepper";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-spl-add',
@@ -30,6 +30,8 @@ import {Router} from "@angular/router";
   styleUrl: './spl-add.component.scss'
 })
 export class SplAddComponent implements OnInit {
+  private id: number = null!;
+  protected isEditMode: boolean = false;
   protected canSubmit: boolean = true;
   protected stopPoints: StopPoint[] = null!;
   protected lines: Line[] = null!;
@@ -40,31 +42,23 @@ export class SplAddComponent implements OnInit {
               private stopPointService: StopPointService,
               private lineService: LineService,
               private snackBar: MatSnackBar,
-              private router: Router) {
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    this.initializeEdit();
     this.initializeStopPointsArray();
     this.initializeLinesArray();
   }
 
-  handleSubmit(splForm: NgForm): void {
-    if (!splForm.valid) {
+  handleSubmit(): void {
+    if (this.isEditMode) {
+      this.handleEditSPL();
       return;
     }
 
-    const splDto: SPLDTO = {
-      lineId: this.selectedLine.id,
-      stopPointId: this.selectedStopPoint.id
-    }
-
-    this.splService.addSpl(splDto).subscribe({
-      complete: () => {
-        this.snackBar.open('Successfully added SPL.', 'OK', {duration: 3000});
-        this.goBack();
-      },
-      error: err => this.snackBar.open('Failed to add SPL. ' + err, 'OK')
-    });
+    this.handleAddNewSPL();
   }
 
   handleSelectStopPoint(selectedStopPoint: StopPoint) {
@@ -77,6 +71,30 @@ export class SplAddComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['view/spl']).then();
+  }
+
+  private initializeEdit(): void {
+    this.route.params.subscribe({
+      next: params => {
+        if (params['id']) {
+          this.id = +params['id'];
+          this.isEditMode = true;
+          this.initializeEditModeValues();
+        }
+      }
+    });
+  }
+
+  private initializeEditModeValues(): void {
+    if (this.isEditMode) {
+      this.splService.getSingleSpl(this.id).subscribe({
+        next: value => {
+          this.selectedStopPoint = value.data!.stopPoint!;
+          this.selectedLine = value.data!.line!;
+        },
+        error: err => this.snackBar.open('Could not initialize edit mode. ' + err, 'OK')
+      });
+    }
   }
 
   private initializeStopPointsArray(): void {
@@ -96,6 +114,36 @@ export class SplAddComponent implements OnInit {
         this.snackBar.open('Could not load lines. ' + err, 'OK');
         this.canSubmit = false;
       }
+    });
+  }
+
+  private handleAddNewSPL(): void {
+    const splDto: SPLDTO = {
+      lineId: this.selectedLine.id,
+      stopPointId: this.selectedStopPoint.id
+    }
+
+    this.splService.addSpl(splDto).subscribe({
+      complete: () => {
+        this.snackBar.open('Successfully added SPL.', 'OK', {duration: 3000});
+        this.goBack();
+      },
+      error: err => this.snackBar.open('Failed to add SPL. ' + err, 'OK')
+    });
+  }
+
+  private handleEditSPL(): void {
+    const splDto: SPLDTO = {
+      lineId: this.selectedLine.id,
+      stopPointId: this.selectedStopPoint.id
+    }
+
+    this.splService.updateSpl(this.id, splDto).subscribe({
+      complete: () => {
+        this.snackBar.open('Successfully updated SPL.', 'OK', {duration: 3000});
+        this.goBack();
+      },
+      error: err => this.snackBar.open('Failed to update SPL. ' + err, 'OK')
     });
   }
 }
