@@ -57,4 +57,8 @@ export class ScheduleListComponent implements OnInit {
       error: err => this.snackBar.open('Could not delete schedule. ' + err, 'OK')
     })
   }
+
+  handleAttachSpl(scheduleItem: ScheduleEntry) {
+    this.router.navigate([`edit/schedule/${scheduleItem.id}/attachspl`]).then();
+  }
 }
