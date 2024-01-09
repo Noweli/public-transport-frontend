@@ -1,9 +1,9 @@
 <div class="container">
+  <h2>Attach SPL</h2>
   <mat-card *ngFor="let splItem of splList"
             class="margin-bottom-sm margin-right-sm card padding-bottom"
             (click)="selectedSpl = splItem"
-            [ngClass]="selectedSpl?.id === splItem.id ? 'selected-card' : undefined"
-  >
+            [ngClass]="selectedSpl?.id === splItem.id ? 'selected-card' : undefined">
     <mat-card-header>
       <mat-card-title>Line: {{ splItem.line?.name }} <br>
         Stop point: {{ splItem.stopPoint?.name }} ({{ splItem.stopPoint?.identifier }})

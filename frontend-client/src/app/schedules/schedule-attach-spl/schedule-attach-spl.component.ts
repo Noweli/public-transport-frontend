@@ -4,7 +4,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ScheduleService} from "../../services/schedule.service";
 import {SplService} from "../../services/spl.service";
 import {StopPointLineCorrelation} from "../../services/models/public-transport-api";
-import {ScheduleHelper} from "../../helpers/schedule-helper";
 import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
 import {MatDividerModule} from "@angular/material/divider";
@@ -68,6 +67,4 @@ export class ScheduleAttachSplComponent implements OnInit {
       error: err => this.snackBar.open('Could not load SPL list. ' + err, 'OK')
     });
   }
-
-  protected readonly ScheduleHelper = ScheduleHelper;
 }
