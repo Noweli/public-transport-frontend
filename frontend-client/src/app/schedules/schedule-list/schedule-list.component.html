@@ -1,10 +1,11 @@
 <div class="container">
+  <h2>Schedule list</h2>
   <div class="margin-bottom-sm">
     <button mat-raised-button color="primary" class="margin-right-sm" (click)="refreshSchedules()">Refresh</button>
     <a mat-stroked-button color="accent" routerLink="/add/schedule">Add new schedule</a>
   </div>
   <mat-divider class="margin-bottom-sm"/>
-  <mat-grid-list cols="3" rowHeight="2:1" gutterSize="1rem">
+  <mat-grid-list cols="3" gutterSize="1rem">
     <mat-grid-tile *ngFor="let scheduleItem of scheduleList">
       <mat-card class="mat-card-fluid">
         <mat-card-header>
@@ -18,6 +19,7 @@
         </mat-card-content>
         <mat-card-content> Date time: {{ scheduleItem.dateTime }}</mat-card-content>
         <mat-card-actions align="end">
+          <button mat-button color="accent" (click)="handleAttachSpl(scheduleItem)">Attach SPL</button>
           <button mat-button (click)="handleEditSchedule(scheduleItem)">Edit</button>
           <button mat-button color="warn" (click)="handleDeleteSchedule(scheduleItem)">Delete</button>
         </mat-card-actions>

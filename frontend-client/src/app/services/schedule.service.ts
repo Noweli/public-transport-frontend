@@ -33,6 +33,14 @@ export class ScheduleService {
     ).pipe(catchError(ServiceHelpers.handleError));
   }
 
+  public attachScheduleToSpl(scheduleId: number, splId: number) {
+    return this.httpClient.patch<ScheduleEntryResult>(
+      `${environment.apiUrl}${this.scheduleEndpoint}/${scheduleId}`,
+      null,
+      {params: new HttpParams().set('splId', splId)}
+    ).pipe(catchError(ServiceHelpers.handleError));
+  }
+
   public deleteSchedule(id: number): Observable<Result> {
     return this.httpClient.delete<Result>(
       `${environment.apiUrl}${this.scheduleEndpoint}`,

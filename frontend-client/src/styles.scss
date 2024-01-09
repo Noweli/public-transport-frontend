@@ -19,6 +19,8 @@ body {
 }
 
 .mat-card-fluid {
+  display: inline-block;
+  align-self: start;
   width: 100%;
 }
 
@@ -33,4 +35,12 @@ body {
 .margin-right-sm {
   margin-right: 1rem;
 }
+
+.selected-card {
+  border-width: 1px !important;
+  border-color: red !important;
+
+  box-shadow: 1px 1px 3px red !important;
+}
+
 

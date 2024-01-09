@@ -7,6 +7,7 @@ import {ScheduleListComponent} from "./schedules/schedule-list/schedule-list.com
 import {ScheduleAddComponent} from "./schedules/schedule-add/schedule-add.component";
 import {SplListComponent} from "./spl/spl-list/spl-list.component";
 import {SplAddComponent} from "./spl/spl-add/spl-add.component";
+import {ScheduleAttachSplComponent} from "./schedules/schedule-attach-spl/schedule-attach-spl.component";
 
 export const routes: Routes = [
   {path: 'view/lines', component: LinesListComponent},
@@ -18,6 +19,7 @@ export const routes: Routes = [
   {path: 'view/schedules', component: ScheduleListComponent},
   {path: 'add/schedule', component: ScheduleAddComponent},
   {path: 'edit/schedule/:id', component: ScheduleAddComponent},
+  {path: 'edit/schedule/:id/attachspl', component: ScheduleAttachSplComponent},
   {path: 'view/spl', component: SplListComponent},
   {path: 'add/spl', component: SplAddComponent},
   {path: 'edit/spl/:id', component: SplAddComponent}
