@@ -34,3 +34,11 @@ body {
   margin-right: 1rem;
 }
 
+.selected-card {
+  border-width: 1px !important;
+  border-color: red !important;
+
+  box-shadow: 1px 1px 3px red !important;
+}
+
+
