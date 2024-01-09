@@ -67,4 +67,14 @@ export class ScheduleAttachSplComponent implements OnInit {
       error: err => this.snackBar.open('Could not load SPL list. ' + err, 'OK')
     });
   }
+
+  handleAttach(): void {
+    this.scheduleService.attachScheduleToSpl(this.id, this.selectedSpl.id!).subscribe({
+      complete: () => {
+        this.snackBar.open('SPL attached successfully.', 'OK', {duration: 3000});
+        this.router.navigate(['view/schedules']).then();
+      },
+      error: err => this.snackBar.open('Could not attach SPL. ' + err, 'OK')
+    });
+  }
 }
